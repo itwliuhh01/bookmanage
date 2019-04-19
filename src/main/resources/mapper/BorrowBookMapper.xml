@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.limai.dao.BorrowBookMapper" >
+  <resultMap id="BaseResultMap" type="com.limai.entity.BorrowBook" >
+    <id column="readerId" property="readerid" jdbcType="VARCHAR" />
+    <id column="ISBN" property="isbn" jdbcType="VARCHAR" />
+    <result column="borrowDate" property="borrowdate" jdbcType="TIMESTAMP" />
+    <result column="returnDate" property="returndate" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="fine" property="fine" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    readerId, ISBN, borrowDate, returnDate, status, fine
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.limai.entity.BorrowBookKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from borrow_book
+    where readerId = #{readerid,jdbcType=VARCHAR}
+      and ISBN = #{isbn,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.limai.entity.BorrowBookKey" >
+    delete from borrow_book
+    where readerId = #{readerid,jdbcType=VARCHAR}
+      and ISBN = #{isbn,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.limai.entity.BorrowBook" >
+    insert into borrow_book (readerId, ISBN, borrowDate, 
+      returnDate, status, fine
+      )
+    values (#{readerid,jdbcType=VARCHAR}, #{isbn,jdbcType=VARCHAR}, #{borrowdate,jdbcType=TIMESTAMP}, 
+      #{returndate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{fine,jdbcType=DOUBLE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.limai.entity.BorrowBook" >
+    insert into borrow_book
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="readerid != null" >
+        readerId,
+      </if>
+      <if test="isbn != null" >
+        ISBN,
+      </if>
+      <if test="borrowdate != null" >
+        borrowDate,
+      </if>
+      <if test="returndate != null" >
+        returnDate,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="fine != null" >
+        fine,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="readerid != null" >
+        #{readerid,jdbcType=VARCHAR},
+      </if>
+      <if test="isbn != null" >
+        #{isbn,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowdate != null" >
+        #{borrowdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="returndate != null" >
+        #{returndate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="fine != null" >
+        #{fine,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.limai.entity.BorrowBook" >
+    update borrow_book
+    <set >
+      <if test="borrowdate != null" >
+        borrowDate = #{borrowdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="returndate != null" >
+        returnDate = #{returndate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="fine != null" >
+        fine = #{fine,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where readerId = #{readerid,jdbcType=VARCHAR}
+      and ISBN = #{isbn,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.limai.entity.BorrowBook" >
+    update borrow_book
+    set borrowDate = #{borrowdate,jdbcType=TIMESTAMP},
+      returnDate = #{returndate,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      fine = #{fine,jdbcType=DOUBLE}
+    where readerId = #{readerid,jdbcType=VARCHAR}
+      and ISBN = #{isbn,jdbcType=VARCHAR}
+  </update>
+
+  <select id="queryUserBorrowedBooks" parameterType="com.limai.entity.BorrowBook">
+  </select>
+</mapper>

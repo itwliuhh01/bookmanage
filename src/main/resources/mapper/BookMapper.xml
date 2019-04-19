@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.limai.dao.BookMapper" >
+  <resultMap id="BaseResultMap" type="com.limai.entity.Book" >
+    <id column="ISBN" property="isbn" jdbcType="CHAR" />
+    <result column="typeId" property="typeId" jdbcType="VARCHAR" />
+    <result column="bookName" property="bookName" jdbcType="VARCHAR" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="publish" property="publish" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="publicationDate" property="publicationdate" jdbcType="TIMESTAMP" />
+    <result column="edition" property="edition" jdbcType="VARCHAR" />
+    <result column="bookStatus" property="bookStatus" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="undercarriage" property="undercarriage"/>
+    <association property="bookType" javaType="com.limai.entity.BookType">
+      <id property="typeId" column="typeId"/>
+      <result property="typename" column="typeName"/>
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ISBN, typeId, bookName, author, publish, price, publicationDate,edition,bookStatus,description,undercarriage
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from book
+    where ISBN = #{isbn,jdbcType=CHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    UPDATE  book set undercarriage=0
+    where ISBN = #{isbn,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.limai.entity.Book" >
+    insert into book (ISBN, typeId, bookName,
+      author, publish, price, 
+      publicationDate,edition,bookStatus,description)
+    values (#{isbn,jdbcType=CHAR}, #{typeId,jdbcType=VARCHAR}, #{bookName,jdbcType=VARCHAR},
+      #{author,jdbcType=VARCHAR}, #{publish,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE},
+      #{publicationdate,jdbcType=VARCHAR},#{edition},#{bookStatus},#{description})
+  </insert>
+  <insert id="insertSelective" parameterType="com.limai.entity.Book" >
+    insert into book
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="isbn != null" >
+        ISBN,
+      </if>
+      <if test="typeid != null" >
+        typeId,
+      </if>
+      <if test="bookname != null" >
+        bookName,
+      </if>
+      <if test="author != null" >
+        author,
+      </if>
+      <if test="publish != null" >
+        publish,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="publicationdate != null" >
+        publicationDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="isbn != null" >
+        #{isbn,jdbcType=CHAR},
+      </if>
+      <if test="typeid != null" >
+        #{typeid,jdbcType=VARCHAR},
+      </if>
+      <if test="bookname != null" >
+        #{bookname,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null" >
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="publish != null" >
+        #{publish,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="publicationdate != null" >
+        #{publicationdate,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateBookStatus" parameterType="com.limai.entity.Book" >
+    UPDATE book set bookStatus=#{bookStatus}
+    where ISBN = #{isbn,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.limai.entity.Book" >
+    update book
+    set typeId = #{typeid,jdbcType=VARCHAR},
+      bookName = #{bookname,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      publish = #{publish,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      publicationDate = #{publicationdate,jdbcType=VARCHAR}
+    where ISBN = #{isbn,jdbcType=CHAR}
+  </update>
+  <!--图书信息查询-->
+  <select id="findAll" resultMap="BaseResultMap">
+      SELECT ISBN, b.typeId, bookName, author, publish, price, publicationDate,edition,bookStatus,description,undercarriage,bt.typeName
+      from  book b left join book_type bt on b.typeId=bt.typeId WHERE undercarriage=1
+  </select>
+  <!--根据图书名称模糊查询该图书有哪几种书籍-->
+  <select id="queryBookKindsByName" resultMap="BaseResultMap" parameterType="com.limai.entity.Book">
+    select distinct(bookname),author,publish,publicationDate,edition,price,b.typeId,bt.typeName
+    from book b
+    left join book_type bt
+    on b.typeId=bt.typeId
+    where undercarriage=1 and bookName like CONCAT('%',#{bookName},'%')
+  </select>
+  
+  <select id="queryBookByName" resultMap="BaseResultMap" parameterType="com.limai.entity.Book">
+    select ISBN, b.typeId, bookName, author, publish, price, publicationDate,edition,bookStatus,description,undercarriage,bt.typeName
+    from book b
+    left join book_type bt
+    on b.typeId=bt.typeId
+    where bookName=#{bookName} and author=#{author} and publish=#{publish} AND undercarriage=1
+  </select>
+  <!--更新图书信息-->
+  <update id="updateBook" parameterType="com.limai.entity.Book">
+    UPDATE book
+    <set>
+      <if test="typeId != null">
+        typeId = #{typeId},
+      </if>
+      <if test="bookName != null">
+        bookName = #{bookName},
+      </if>
+      <if test="author != null">
+        author = #{author},
+      </if>
+      <if test="publish != null">
+        publish = #{publish},
+      </if>
+      <if test="price != null">
+        price = #{price},
+      </if>
+      <if test="publicationdate != null">
+        publicationDate = #{publicationdate},
+      </if>
+      <if test="edition != null">
+        edition = #{edition},
+      </if>
+      <if test="description != null">
+        description = #{description}
+      </if>
+    </set>
+    where ISBN = ${isbn}
+  </update>
+  
+</mapper>

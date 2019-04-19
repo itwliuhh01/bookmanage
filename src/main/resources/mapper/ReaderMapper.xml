@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.limai.dao.ReaderMapper" >
+  <resultMap id="BaseResultMap" type="com.limai.entity.Reader" >
+    <id column="readerId" property="readerid" jdbcType="VARCHAR" />
+    <result column="readerName" property="readername" jdbcType="VARCHAR" />
+    <result column="readerSex" property="readersex" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="CHAR" />
+    <result column="dept" property="dept" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="regdate" property="regdate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    readerId, readerName, readerSex, phone, dept, type, regdate
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from reader
+    where readerId = #{readerid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from reader
+    where readerId = #{readerid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.limai.entity.Reader" >
+    insert into reader (readerId, readerName, readerSex, 
+      phone, dept, type, regdate
+      )
+    values (#{readerid,jdbcType=VARCHAR}, #{readername,jdbcType=VARCHAR}, #{readersex,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=CHAR}, #{dept,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{regdate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.limai.entity.Reader" >
+    insert into reader
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="readerid != null" >
+        readerId,
+      </if>
+      <if test="readername != null" >
+        readerName,
+      </if>
+      <if test="readersex != null" >
+        readerSex,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="dept != null" >
+        dept,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="regdate != null" >
+        regdate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="readerid != null" >
+        #{readerid,jdbcType=VARCHAR},
+      </if>
+      <if test="readername != null" >
+        #{readername,jdbcType=VARCHAR},
+      </if>
+      <if test="readersex != null" >
+        #{readersex,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=CHAR},
+      </if>
+      <if test="dept != null" >
+        #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="regdate != null" >
+        #{regdate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.limai.entity.Reader" >
+    update reader
+    <set >
+      <if test="readername != null" >
+        readerName = #{readername,jdbcType=VARCHAR},
+      </if>
+      <if test="readersex != null" >
+        readerSex = #{readersex,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=CHAR},
+      </if>
+      <if test="dept != null" >
+        dept = #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="regdate != null" >
+        regdate = #{regdate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where readerId = #{readerid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.limai.entity.Reader" >
+    update reader
+    set readerName = #{readername,jdbcType=VARCHAR},
+      readerSex = #{readersex,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=CHAR},
+      dept = #{dept,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      regdate = #{regdate,jdbcType=TIMESTAMP}
+    where readerId = #{readerid,jdbcType=VARCHAR}
+  </update>
+</mapper>

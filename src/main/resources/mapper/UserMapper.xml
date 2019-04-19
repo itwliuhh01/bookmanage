@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.limai.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.limai.entity.User" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="userId" property="userId" jdbcType="VARCHAR"/>
+    <result column="corpId" property="corpId" jdbcType="VARCHAR"/>
+    <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+    <result column="active" property="active" jdbcType="INTEGER"/>
+    <result column="departmentId" property="departmentId" jdbcType="VARCHAR"/>
+    <result column="position" property="position" jdbcType="VARCHAR"/>
+    <result column="jobNumber" property="jobNumber" jdbcType="VARCHAR"/>
+    <result column="hiredDate" property="hiredDate" jdbcType="VARCHAR"/>
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, username, password
+  </sql>
+
+  <!--根据userId查询用户信息-->
+  <select id="selectUserByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select mobile,departmentId,userId from user_ where userId=#{userId}
+  </select>
+
+  <select id="selectUserByMobile" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select userId from user_ where mobile=#{mobile}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="login" resultType="com.limai.entity.User" parameterType="java.lang.String">
+    select *
+    from user_ where username=#{username,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user_
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.limai.entity.User" >
+    insert into user_(id, username, password,userId,corpId,mobile,active,departmentId,position,jobNumber,hireDate)
+    values (#{id,jdbcType=INTEGER},
+            #{username,jdbcType=VARCHAR},
+            #{password,jdbcType=VARCHAR},
+            #{userId},
+            #{corpId},
+            #{mobile},
+            #{active},
+            #{departmentId},
+            #{position},
+            #{jobNumber},
+            #{hiredDate}
+      )
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.limai.entity.User" >
+    update user
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.limai.entity.User" >
+    update user
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

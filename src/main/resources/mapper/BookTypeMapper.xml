@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.limai.dao.BookTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.limai.entity.BookType" >
+    <id column="typeId" property="typeId" jdbcType="VARCHAR" />
+    <result column="typeName" property="typename" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    typeId, typeName
+  </sql>
+
+  <select id="selectALL" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from book_type
+  </select>
+
+  <select id="queryBookTypeNameById" parameterType="com.limai.entity.BookType">
+
+  </select>
+
+</mapper>

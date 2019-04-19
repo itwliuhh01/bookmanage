@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.limai.dao.BookUserMapper" >
+    <!--定义基本的返回类型-->
+    <resultMap id="BaseResultMap" type="com.limai.entity.BookUser">
+        <id column="id" property="id"></id>
+        <result column="bookisbn" property="bookIsbn"></result>
+        <result column="userid" property="userId"></result>
+        <result column="borrowStatus" property="borrowStatus"></result>
+        <result column="returnDate" property="returnDate"></result>
+        <result column="borrowDate" property="borrowDate"></result>
+    </resultMap>
+    <resultMap id="QueryUserBorrowBooks" type="com.limai.entity.BookUser">
+        <id column="id" property="id"></id>
+        <result column="bookisbn" property="bookIsbn"></result>
+        <result column="userid" property="userId"></result>
+        <result column="borrowStatus" property="borrowStatus"></result>
+        <result column="returnDate" property="returnDate"></result>
+        <result column="borrowDate" property="borrowDate"></result>
+        <association property="book" javaType="com.limai.entity.Book">
+            <id column="ISBN" property="isbn" jdbcType="CHAR" />
+            <result column="typeId" property="typeId" jdbcType="VARCHAR" />
+            <result column="bookName" property="bookName" jdbcType="VARCHAR" />
+            <result column="author" property="author" jdbcType="VARCHAR" />
+            <result column="publish" property="publish" jdbcType="VARCHAR" />
+            <result column="price" property="price" jdbcType="DOUBLE" />
+            <result column="publicationDate" property="publicationdate" jdbcType="TIMESTAMP" />
+            <result column="edition" property="edition" jdbcType="VARCHAR" />
+            <result column="bookStatus" property="bookStatus" jdbcType="VARCHAR" />
+            <result column="description" property="description" jdbcType="VARCHAR" />
+            <result column="undercarriage" property="undercarriage"/>
+            <association property="bookType" javaType="com.limai.entity.BookType">
+                <id property="typeId" column="typeId"/>
+                <result property="typename" column="typeName"/>
+            </association>
+        </association>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.limai.entity.BookUser">
+      INSERT into bookuser(id,bookisbn,userid,borrowStatus,returnDate,borrowDate)
+      values(#{id},#{bookIsbn},#{userId},#{borrowStatus},#{returnDate},#{borrowDate})
+    </insert>
+
+    <!--修改图书借阅关系表（归还或者续借）-->
+    <update id="updateBookUser" parameterType="com.limai.entity.BookUser">
+      update bookuser
+      <set>
+          <if test="borrowStatus != null">
+            borrowStatus = #{borrowStatus},
+          </if>
+          <if test="returnDate != null">
+              returnDate = #{returnDate}
+          </if>
+      </set>
+      WHERE  id = #{id}
+    </update>
+
+    <!--查询用户借阅的图书-->
+    <select id="queryUserBorrowBooks" resultMap="QueryUserBorrowBooks" parameterType="com.limai.requestVo.QueryUserBorrowBookRequestVo">
+      select bk.id,bk.bookisbn,bk.userid,bk.borrowStatus,bk.returnDate,bk.borrowDate,b.ISBN,b.typeId,b.bookName,
+        b.author, b.publish, b.price, b.publicationDate,b.edition,b.bookStatus,b.description,b.undercarriage,
+        bt.typeName,bt.typeId
+
+      from bookuser bk left join book b
+      on bk.bookisbn = b.ISBN
+      left join book_type bt
+      on bt.typeId = b.typeId
+      <!--所有-->
+      <if test =' queryFlag== "ALL"'>
+          WHERE  userid=#{userId}
+      </if>
+      <!--待归还-->
+      <if test = 'queryFlag== "DGH"'>
+          WHERE userid=#{userId} and borrowStatus in ("1","2")
+          <if test="isbn != null and isbn != ''">
+              AND bookIsbn=#{isbn}
+          </if>
+      </if>
+      <!--已归还-->
+      <if test = 'queryFlag== "YGH"'>
+          WHERE userid=#{userId} and borrowStatus="0"
+      </if>
+      <!--续借-->
+      <if test = 'queryFlag== "XJ"'>
+          WHERE userid=#{userId} and borrowStatus="2"
+      </if>
+    </select>
+
+
+</mapper>

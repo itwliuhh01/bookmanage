@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.limai.dao.ReaderTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.limai.entity.ReaderType" >
+    <id column="typeId" property="typeid" jdbcType="INTEGER" />
+    <result column="typeName" property="typename" jdbcType="VARCHAR" />
+    <result column="limitDate" property="limitdate" jdbcType="INTEGER" />
+    <result column="borrowMax" property="borrowmax" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    typeId, typeName, limitDate, borrowMax
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from reader_type
+    where typeId = #{typeid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from reader_type
+    where typeId = #{typeid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.limai.entity.ReaderType" >
+    insert into reader_type (typeId, typeName, limitDate, 
+      borrowMax)
+    values (#{typeid,jdbcType=INTEGER}, #{typename,jdbcType=VARCHAR}, #{limitdate,jdbcType=INTEGER}, 
+      #{borrowmax,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.limai.entity.ReaderType" >
+    insert into reader_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="typeid != null" >
+        typeId,
+      </if>
+      <if test="typename != null" >
+        typeName,
+      </if>
+      <if test="limitdate != null" >
+        limitDate,
+      </if>
+      <if test="borrowmax != null" >
+        borrowMax,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="typeid != null" >
+        #{typeid,jdbcType=INTEGER},
+      </if>
+      <if test="typename != null" >
+        #{typename,jdbcType=VARCHAR},
+      </if>
+      <if test="limitdate != null" >
+        #{limitdate,jdbcType=INTEGER},
+      </if>
+      <if test="borrowmax != null" >
+        #{borrowmax,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.limai.entity.ReaderType" >
+    update reader_type
+    <set >
+      <if test="typename != null" >
+        typeName = #{typename,jdbcType=VARCHAR},
+      </if>
+      <if test="limitdate != null" >
+        limitDate = #{limitdate,jdbcType=INTEGER},
+      </if>
+      <if test="borrowmax != null" >
+        borrowMax = #{borrowmax,jdbcType=INTEGER},
+      </if>
+    </set>
+    where typeId = #{typeid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.limai.entity.ReaderType" >
+    update reader_type
+    set typeName = #{typename,jdbcType=VARCHAR},
+      limitDate = #{limitdate,jdbcType=INTEGER},
+      borrowMax = #{borrowmax,jdbcType=INTEGER}
+    where typeId = #{typeid,jdbcType=INTEGER}
+  </update>
+</mapper>
